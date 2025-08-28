@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복지서비스 검색</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .search-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .result-item {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+        
+        .result-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .result-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .result-summary {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .result-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+        
+        .meta-item {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: #555;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ 복지서비스 검색</h1>
+            <p>나에게 맞는 정부 복지서비스를 찾아보세요</p>
+        </div>
+        
+        <form class="search-form" id="searchForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">나이</label>
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="예: 25">
+                </div>
+                <div class="form-group">
+                    <label for="searchWrd">검색어</label>
+                    <input type="text" id="searchWrd" name="searchWrd" placeholder="복지서비스 관련 키워드">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="interests">관심분야</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="education" name="interests" value="교육">
+                        <label for="education">교육</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="job" name="interests" value="일자리">
+                        <label for="job">일자리</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="housing" name="interests" value="주거">
+                        <label for="housing">주거</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="health" name="interests" value="신체건강">
+                        <label for="health">신체건강</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="mental" name="interests" value="정신건강">
+                        <label for="mental">정신건강</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="living" name="interests" value="생활지원">
+                        <label for="living">생활지원</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="culture" name="interests" value="문화여가">
+                        <label for="culture">문화·여가</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="safety" name="interests" value="안전위기">
+                        <label for="safety">안전·위기</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="targets">대상자 유형</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lowIncome" name="targets" value="저소득">
+                        <label for="lowIncome">저소득</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="disabled" name="targets" value="장애인">
+                        <label for="disabled">장애인</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="singleParent" name="targets" value="한부모조손">
+                        <label for="singleParent">한부모·조손</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="multicultural" name="targets" value="다문화탈북민">
+                        <label for="multicultural">다문화·탈북민</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="multiChild" name="targets" value="다자녀">
+                        <label for="multiChild">다자녀</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="veteran" name="targets" value="보훈">
+                        <label for="veteran">보훈</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pageNo">페이지 번호</label>
+                    <input type="number" id="pageNo" name="pageNo" min="1" max="1000" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="numOfRows">페이지당 결과 수</label>
+                    <select id="numOfRows" name="numOfRows">
+                        <option value="10">10개</option>
+                        <option value="20" selected>20개</option>
+                        <option value="50">50개</option>
+                        <option value="100">100개</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="search-btn">🔍 복지서비스 검색</button>
+        </form>
+        
+        <div id="results" class="results">
+            <h2>검색 결과</h2>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            
+            // 기본 파라미터
+            if (formData.get('age')) params.append('age', formData.get('age'));
+            if (formData.get('searchWrd')) params.append('searchWrd', formData.get('searchWrd'));
+            if (formData.get('pageNo')) params.append('pageNo', formData.get('pageNo'));
+            if (formData.get('numOfRows')) params.append('numOfRows', formData.get('numOfRows'));
+            
+            // 관심분야 수집
+            const interests = [];
+            document.querySelectorAll('input[name="interests"]:checked').forEach(cb => {
+                interests.push(cb.value);
+            });
+            if (interests.length > 0) {
+                params.append('interests', interests.join(','));
+            }
+            
+            // 대상자 유형 수집
+            const targets = [];
+            document.querySelectorAll('input[name="targets"]:checked').forEach(cb => {
+                targets.push(cb.value);
+            });
+            if (targets.length > 0) {
+                params.append('targets', targets.join(','));
+            }
+            
+            // 결과 영역 표시
+            const resultsDiv = document.getElementById('results');
+            const resultContent = document.getElementById('resultContent');
+            resultsDiv.classList.add('show');
+            resultContent.innerHTML = '<div class="loading">검색 중...</div>';
+            
+            try {
+                const response = await fetch(`/health/welfare-list?${params.toString()}`);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    displayResults(data);
+                } else {
+                    resultContent.innerHTML = `<div class="error">검색 실패: ${data.meta.resultMessage}</div>`;
+                }
+            } catch (error) {
+                resultContent.innerHTML = `<div class="error">네트워크 오류: ${error.message}</div>`;
+            }
+        });
+        
+        function displayResults(data) {
+            const resultContent = document.getElementById('resultContent');
+            const meta = data.meta;
+            const items = data.items || [];
+            
+            let html = `
+                <div class="result-meta" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="meta-item">총 ${meta.totalCount}건</div>
+                    <div class="meta-item">${meta.pageNo}페이지</div>
+                    <div class="meta-item">페이지당 ${meta.numOfRows}건</div>
+                </div>
+            `;
+            
+            if (items.length === 0) {
+                html += '<div class="error">검색 결과가 없습니다.</div>';
+            } else {
+                items.forEach(item => {
+                    html += `
+                        <div class="result-item">
+                            <div class="result-title">${item.title || '제목 없음'}</div>
+                            <div class="result-summary">${item.summary || '설명이 없습니다.'}</div>
+                            <div class="result-meta">
+                                <span class="meta-item">서비스 ID: ${item.servId}</span>
+                                ${item.interests ? `<span class="meta-item">관심분야: ${item.interests}</span>` : ''}
+                                ${item.targets ? `<span class="meta-item">대상자: ${item.targets}</span>` : ''}
+                            </div>
+                            ${item.link ? `<div style="margin-top: 10px;"><a href="${item.link}" target="_blank" style="color: #667eea; text-decoration: none;">📎 자세히 보기</a></div>` : ''}
+                        </div>
+                    `;
+                });
+            }
+            
+            resultContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
