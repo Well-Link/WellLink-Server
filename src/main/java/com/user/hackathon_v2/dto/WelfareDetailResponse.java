@@ -41,6 +41,9 @@ public class WelfareDetailResponse {
     
     @Data
     public static class WelfareDetailItem {
+        @JacksonXmlProperty(localName = "servId")
+        private String servId;
+        
         @JacksonXmlProperty(localName = "servNm")
         private String servNm;
         
