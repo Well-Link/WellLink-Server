@@ -3,14 +3,11 @@ FROM gradle:8.10.2-jdk17-alpine AS build
 
 WORKDIR /app
 
-# Cache dependencies first
-COPY build.gradle settings.gradle ./
-COPY gradle gradle
-COPY gradlew gradlew
-RUN chmod +x gradlew
-
-# Copy the rest of the source
+# Copy full source
 COPY . .
+
+# Ensure wrapper is Unix-formatted and executable (fixes CRLF & permission issues)
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
 # Build the application (skip tests)
 RUN ./gradlew clean build -x test --no-daemon
