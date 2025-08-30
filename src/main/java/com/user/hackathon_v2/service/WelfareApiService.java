@@ -101,12 +101,15 @@ public class WelfareApiService {
             
             // XML 응답을 JSON DTO로 변환
             WelfareDetailJsonResponse jsonResponse = new WelfareDetailJsonResponse();
+            
+            // servId는 루트 레벨에서 가져오기
+            jsonResponse.setServId(xmlResponse.getServId());
+            
             if (xmlResponse.getBody() != null && xmlResponse.getBody().getItems() != null && 
                 xmlResponse.getBody().getItems().getItemList() != null && 
                 !xmlResponse.getBody().getItems().getItemList().isEmpty()) {
                 
                 WelfareDetailResponse.WelfareDetailItem item = xmlResponse.getBody().getItems().getItemList().get(0);
-                jsonResponse.setServId(item.getServId());
                 jsonResponse.setServNm(item.getServNm());
                 jsonResponse.setJurMnofNm(item.getJurMnofNm());
                 jsonResponse.setTgtrDtlCn(item.getTgtrDtlCn());
