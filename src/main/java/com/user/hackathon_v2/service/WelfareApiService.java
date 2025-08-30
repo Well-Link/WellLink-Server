@@ -99,26 +99,17 @@ public class WelfareApiService {
             // XML 응답을 파싱하여 DTO로 변환
             WelfareDetailResponse xmlResponse = xmlMapper.readValue(response.getBody(), WelfareDetailResponse.class);
             
-            // XML 응답을 JSON DTO로 변환
+            // XML 응답을 JSON DTO로 변환 (모든 데이터가 루트 레벨에 있음)
             WelfareDetailJsonResponse jsonResponse = new WelfareDetailJsonResponse();
-            
-            // servId는 루트 레벨에서 가져오기
             jsonResponse.setServId(xmlResponse.getServId());
-            
-            if (xmlResponse.getBody() != null && xmlResponse.getBody().getItems() != null && 
-                xmlResponse.getBody().getItems().getItemList() != null && 
-                !xmlResponse.getBody().getItems().getItemList().isEmpty()) {
-                
-                WelfareDetailResponse.WelfareDetailItem item = xmlResponse.getBody().getItems().getItemList().get(0);
-                jsonResponse.setServNm(item.getServNm());
-                jsonResponse.setJurMnofNm(item.getJurMnofNm());
-                jsonResponse.setTgtrDtlCn(item.getTgtrDtlCn());
-                jsonResponse.setSlctCritCn(item.getSlctCritCn());
-                jsonResponse.setAlwServCn(item.getAlwServCn());
-                jsonResponse.setSprtCycNm(item.getSprtCycNm());
-                jsonResponse.setInqplHmpgReldList(item.getInqplHmpgReldList());
-                jsonResponse.setInqplCtadrList(item.getInqplCtadrList());
-            }
+            jsonResponse.setServNm(xmlResponse.getServNm());
+            jsonResponse.setJurMnofNm(xmlResponse.getJurMnofNm());
+            jsonResponse.setTgtrDtlCn(xmlResponse.getTgtrDtlCn());
+            jsonResponse.setSlctCritCn(xmlResponse.getSlctCritCn());
+            jsonResponse.setAlwServCn(xmlResponse.getAlwServCn());
+            jsonResponse.setSprtCycNm(xmlResponse.getSprtCycNm());
+            jsonResponse.setInqplHmpgReldList(xmlResponse.getInqplHmpgReldList());
+            jsonResponse.setInqplCtadrList(xmlResponse.getInqplCtadrList());
             
             // 에러 코드가 있다면 설정
             if (xmlResponse.getHeader() != null) {

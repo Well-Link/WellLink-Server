@@ -17,8 +17,33 @@ public class WelfareDetailResponse {
     @JacksonXmlProperty(localName = "body")
     private Body body;
     
+    // 모든 상세 정보가 루트 레벨에 있음
     @JacksonXmlProperty(localName = "servId")
     private String servId;
+    
+    @JacksonXmlProperty(localName = "servNm")
+    private String servNm;
+    
+    @JacksonXmlProperty(localName = "jurMnofNm")
+    private String jurMnofNm;
+    
+    @JacksonXmlProperty(localName = "tgtrDtlCn")
+    private String tgtrDtlCn;
+    
+    @JacksonXmlProperty(localName = "slctCritCn")
+    private String slctCritCn;
+    
+    @JacksonXmlProperty(localName = "alwServCn")
+    private String alwServCn;
+    
+    @JacksonXmlProperty(localName = "sprtCycNm")
+    private String sprtCycNm;
+    
+    @JacksonXmlProperty(localName = "inqplHmpgReldList")
+    private String inqplHmpgReldList;
+    
+    @JacksonXmlProperty(localName = "inqplCtadrList")
+    private String inqplCtadrList;
     
     @Data
     public static class Header {
