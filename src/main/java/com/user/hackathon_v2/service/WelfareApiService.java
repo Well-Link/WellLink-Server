@@ -96,8 +96,31 @@ public class WelfareApiService {
             log.info("API 응답 상태: {}", response.getStatusCode());
             log.info("API 응답 내용: {}", response.getBody());
             
-            // JSON으로 파싱 시도
-            return objectMapper.readValue(response.getBody(), WelfareDetailJsonResponse.class);
+            // XML 응답을 파싱하여 DTO로 변환
+            WelfareDetailResponse xmlResponse = xmlMapper.readValue(response.getBody(), WelfareDetailResponse.class);
+            
+            // XML 응답을 JSON DTO로 변환
+            WelfareDetailJsonResponse jsonResponse = new WelfareDetailJsonResponse();
+            if (xmlResponse.getBody() != null && xmlResponse.getBody().getItems() != null) {
+                WelfareDetailResponse.WelfareDetailItem item = xmlResponse.getBody().getItems();
+                jsonResponse.setServId(item.getServId());
+                jsonResponse.setServNm(item.getServNm());
+                jsonResponse.setJurMnofNm(item.getJurMnofNm());
+                jsonResponse.setTgtrDtlCn(item.getTgtrDtlCn());
+                jsonResponse.setSlctCritCn(item.getSlctCritCn());
+                jsonResponse.setAlwServCn(item.getAlwServCn());
+                jsonResponse.setSprtCycNm(item.getSprtCycNm());
+                jsonResponse.setInqplHmpgReldList(item.getInqplHmpgReldList());
+                jsonResponse.setInqplCtadrList(item.getInqplCtadrList());
+            }
+            
+            // 에러 코드가 있다면 설정
+            if (xmlResponse.getHeader() != null) {
+                jsonResponse.setResultCode(xmlResponse.getHeader().getResultCode());
+                jsonResponse.setResultMsg(xmlResponse.getHeader().getResultMsg());
+            }
+            
+            return jsonResponse;
             
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Service Key 인코딩 실패", e);
