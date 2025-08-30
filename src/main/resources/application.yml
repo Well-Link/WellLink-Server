@@ -1,0 +1,15 @@
+external:
+  api:
+    base-url: ${EXTERNAL_API_BASEURL:http://apis.data.go.kr/B554287/NationalWelfareInformationsV001}
+    service-key: ${SERVICE_KEY:}
+
+spring:
+  application:
+    name: hackathon_v2
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.user.hackathon_v2: INFO
