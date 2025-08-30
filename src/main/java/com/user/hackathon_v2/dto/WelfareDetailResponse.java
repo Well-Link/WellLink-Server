@@ -1,5 +1,6 @@
 package com.user.hackathon_v2.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -8,6 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "response")
 public class WelfareDetailResponse {
     
@@ -46,6 +48,7 @@ public class WelfareDetailResponse {
     private String inqplCtadrList;
     
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Header {
         @JacksonXmlProperty(localName = "resultCode")
         private String resultCode;
@@ -55,12 +58,14 @@ public class WelfareDetailResponse {
     }
     
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Body {
         @JacksonXmlProperty(localName = "items")
         private Items items;
     }
     
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Items {
         @JacksonXmlElementWrapper(useWrapping = false)
         @JacksonXmlProperty(localName = "item")
@@ -68,6 +73,7 @@ public class WelfareDetailResponse {
     }
     
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class WelfareDetailItem {
         @JacksonXmlProperty(localName = "servNm")
         private String servNm;

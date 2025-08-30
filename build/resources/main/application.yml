@@ -6,9 +6,14 @@ external:
 spring:
   application:
     name: hackathon_v2
+  web:
+    resources:
+      add-mappings: false
 
 server:
   port: 8080
+  servlet:
+    context-path: /
 
 logging:
   level:
